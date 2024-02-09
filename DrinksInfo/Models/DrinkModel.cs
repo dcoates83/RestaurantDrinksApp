@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DrinksInfo.Models
+﻿namespace DrinksInfo.Models
 {
     internal class DrinkModel
     {
+        public required string StrDrink { get; set; }
+
+        public required string StrDrinkThumb { get; set; }
+        public int IdDrink { get; set; }
     }
 }
