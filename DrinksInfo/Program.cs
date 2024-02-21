@@ -1,6 +1,6 @@
-﻿using DrinksInfo.Models;
-using System.Net.Http.Headers;
-
+﻿using DrinksInfo.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace DrinksInfo
 {
@@ -12,35 +12,19 @@ namespace DrinksInfo
 
         private static void Main(string[] args)
         {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.BaseAddress = new Uri(URL);
 
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-            // List data response.
-            HttpResponseMessage response = client.GetAsync(urlParameters).Result;  // Blocking call! Program will wait here until a response is received or a timeout occurs.
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine(response);
-                //// Parse the response body.
-                IEnumerable<CategoryModel> dataObjects = response.Content.ReadAsAsync<IEnumerable<CategoryModel>>().Result;  //Make sure to add a reference to System.Net.Http.Formatting.dll
-                foreach (CategoryModel d in dataObjects)
-                {
-                    Console.WriteLine("{0}", d.StrCategory);
-                }
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-            }
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-            // Make any other calls using HttpClient here.
+            _ = builder.Services.AddHttpClient();
+            _ = builder.Services.AddTransient<CategoriesService>();
 
-            // Dispose once all HttpClient calls are complete. This is not necessary if the containing object will be disposed of; for example in this case the HttpClient instance will be disposed automatically when the application terminates so the following call is superfluous.
-            client.Dispose();
+            using IHost host = builder.Build();
+
+            CategoriesService categoriesService = host.Services.GetRequiredService<CategoriesService>();
+            categoriesService.GetCategoriesAsync().Wait();
         }
+
+
     }
 
 }
