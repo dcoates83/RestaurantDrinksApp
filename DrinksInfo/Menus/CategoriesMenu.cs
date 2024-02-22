@@ -1,13 +1,20 @@
-﻿namespace DrinksInfo.Menus
+﻿using DrinksInfo.Models;
+using Spectre.Console;
+
+namespace DrinksInfo.Menus
 {
     // Logic for displaying the categories menu
     internal class CategoriesMenu
     {
-        public void DisplayCategoriesMenu()
+        public void DisplayCategoriesMenu(CategoryModel[] categories)
         {
-            Console.WriteLine("Categories Menu");
-            Console.WriteLine("1. Hot Drinks");
-            Console.WriteLine("2. Cold Drinks");
+            Table table = new();
+            _ = table.AddColumn("Categories");
+            foreach (CategoryModel category in categories)
+            {
+                _ = table.AddRow(category.StrCategory);
+            }
+
         }
     }
 }

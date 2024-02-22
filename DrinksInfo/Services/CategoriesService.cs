@@ -1,10 +1,13 @@
 ﻿using DrinksInfo.Models;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace DrinksInfo.Services
 {
+    public class CategoryResponse
+    {
+        public List<CategoryModel> Drinks { get; set; } = [];
+    }
 
     public class CategoriesService(
         IHttpClientFactory httpClientFactory,
@@ -13,24 +16,30 @@ namespace DrinksInfo.Services
 
         private const string URL = "https://www.thecocktaildb.com/api/json/v1/1/list.php";
         private static readonly string urlParameters = "?c=list";
-        public async Task<CategoryModel[]> GetCategoriesAsync()
+        public async Task<CategoryModel[]?> GetCategoriesAsync()
         {
-            // Create the client
+
             using HttpClient client = httpClientFactory.CreateClient();
 
             try
             {
-                // Make HTTP GET request
-                // Parse JSON response deserialize into Todo types
-                CategoryModel[]? categories = await client.GetFromJsonAsync<CategoryModel[]>(
-                    $"{URL}{urlParameters}",
-                    new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                using HttpResponseMessage response = await client.GetAsync($"{URL}{urlParameters}");
+                _ = response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
 
-                return categories ?? [];
+                if (response.IsSuccessStatusCode)
+                {
+
+                    CategoryResponse? categoryResponse = await response.Content.ReadFromJsonAsync<CategoryResponse>();
+                    List<CategoryModel>? categories = categoryResponse?.Drinks;
+                    return categories?.ToArray();
+                }
+
             }
-            catch (Exception ex)
+            catch (HttpRequestException e)
             {
-                logger.LogError("Error getting something fun to say: {Error}", ex);
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
             }
 
             return [];

@@ -6,9 +6,7 @@ namespace DrinksInfo
 {
     internal class Program
     {
-        private const string URL = "https://www.thecocktaildb.com/api/json/v1/1/list.php";
-        private static readonly string urlParameters = "?c=list";
-        // Entry point of the console application, could initialize the CategoriesMenu
+
 
         private static void Main(string[] args)
         {
@@ -22,6 +20,8 @@ namespace DrinksInfo
 
             CategoriesService categoriesService = host.Services.GetRequiredService<CategoriesService>();
             categoriesService.GetCategoriesAsync().Wait();
+
+
         }
 
 
