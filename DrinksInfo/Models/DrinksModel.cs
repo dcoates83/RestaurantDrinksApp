@@ -1,6 +1,6 @@
 ﻿namespace DrinksInfo.Models
 {
-    internal class DrinkModel
+    public class DrinksModel
     {
         public required string StrDrink { get; set; }
 

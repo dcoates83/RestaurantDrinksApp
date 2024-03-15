@@ -6,7 +6,7 @@ namespace DrinksInfo.Menus
     // Logic for displaying the categories menu
     internal class CategoriesMenu
     {
-        public void DisplayCategoriesMenu(CategoryModel[] categories)
+        public static void DisplayCategoriesMenu(CategoryModel[] categories)
         {
             Table table = new();
             _ = table.AddColumn("Categories");
@@ -14,7 +14,7 @@ namespace DrinksInfo.Menus
             {
                 _ = table.AddRow(category.StrCategory);
             }
-
+            AnsiConsole.Write(table);
         }
     }
 }
