@@ -17,10 +17,12 @@ namespace DrinksInfo
 
             _ = builder.Services.AddHttpClient();
             _ = builder.Services.AddTransient<CategoriesService>();
+            _ = builder.Services.AddTransient<DrinksService>();
 
             using IHost host = builder.Build();
 
             CategoriesService categoriesService = host.Services.GetRequiredService<CategoriesService>();
+            DrinksService drinksService = host.Services.GetRequiredService<DrinksService>();
             CategoryModel[]? drinkCategories = await categoriesService.GetCategoriesAsync();
 
             while (drinkCategories is not null)
@@ -30,7 +32,7 @@ namespace DrinksInfo
                 string? resp = Console.ReadLine();
                 if (resp is not null)
                 {
-                    DrinksService drinksService = host.Services.GetRequiredService<DrinksService>();
+
                     DrinksModel[]? drinks = await drinksService.GetDrinksAsync(resp);
                     DrinksMenu.DisplayDrinksMenu(drinks);
                 }
